@@ -1,0 +1,27 @@
+{
+  "name": "sew-pdf-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline-first PDF utility Android app for Sushila Engineering Works",
+  "scripts": {
+    "bundle:libs": "node scripts/copy-libs.js",
+    "bundle:app": "esbuild www/app.js --bundle --platform=browser --target=es2020 --outfile=www/app.bundle.js",
+    "build:web": "npm run bundle:libs && npm run bundle:app",
+    "build:android": "npm run build:web && npx cap sync android",
+    "test": "node scripts/smoke-test.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/filesystem": "^6.0.0",
+    "@capacitor/share": "^6.0.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "3.11.174",
+    "jspdf": "^2.5.2",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0",
+    "esbuild": "^0.24.0"
+  }
+}

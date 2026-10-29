@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11162b">
+  <meta name="description" content="Free PDF tools: view, merge, split, compress, convert, scan and sign documents on your device.">
+  <title>PDF Tools</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <button class="brand" onclick="showHome()" aria-label="PDF Tools home">
+      <span class="brand-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 4h16l9 9v29H12a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z" fill="none" stroke="currentColor" stroke-width="2.8"/><path d="M28 4v10h9" fill="none" stroke="currentColor" stroke-width="2.8"/><path d="M14 29h20M14 35h15" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="M14 19h7v5h-7z" fill="#ff5964"/></svg></span>
+      <span class="brand-copy"><strong>PDF Tools</strong><small>Simple. Private. Useful.</small></span>
+    </button>
+    <div class="header-pill"><span class="privacy-dot"></span> Files stay on your device</div>
+  </header>
+
+  <main>
+    <section id="dashboard" class="dashboard">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR DOCUMENT TOOLKIT</span>
+          <h1>Everything PDF.<br><span>All in one place.</span></h1>
+          <p>Convert, organise and prepare documents using a clean set of everyday tools. Processing is performed locally in the app.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="paper paper-back"></div>
+          <div class="paper paper-front"><span>PDF</span><i></i><i></i><i></i></div>
+          <div class="spark spark-one">✦</div><div class="spark spark-two">✧</div>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div><span class="eyebrow">TOOLS</span><h2>What do you need to do?</h2></div>
+        <span class="tool-count">9 utilities</span>
+      </div>
+      <div class="tool-grid">
+        <button class="tool-card" onclick="openTool('viewer')"><span class="tool-icon blue">▤</span><span class="tool-title">PDF Viewer</span><span class="tool-desc">Open and read PDF pages</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('photo')"><span class="tool-icon green">▧</span><span class="tool-title">Photo to PDF</span><span class="tool-desc">Turn photos into one PDF</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('merge')"><span class="tool-icon violet">▤+</span><span class="tool-title">Merge PDF</span><span class="tool-desc">Combine multiple documents</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('split')"><span class="tool-icon orange">✂</span><span class="tool-title">Split PDF</span><span class="tool-desc">Extract selected pages</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('compress')"><span class="tool-icon red">⇣</span><span class="tool-title">Compress PDF</span><span class="tool-desc">Create a smaller, flattened PDF</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('pdf2word')"><span class="tool-icon blue">W</span><span class="tool-title">PDF to Word</span><span class="tool-desc">Extract text into an editable DOCX</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('word2pdf')"><span class="tool-icon cyan">P</span><span class="tool-title">Word to PDF</span><span class="tool-desc">Convert DOCX or text to PDF</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('scan')"><span class="tool-icon teal">▣</span><span class="tool-title">Scan to PDF</span><span class="tool-desc">Capture pages with your camera</span><span class="tool-arrow">↗</span></button>
+        <button class="tool-card" onclick="openTool('editor')"><span class="tool-icon pink">✎</span><span class="tool-title">PDF Editor & Sign</span><span class="tool-desc">Add a note or draw a signature</span><span class="tool-arrow">↗</span></button>
+      </div>
+
+      <section class="info-strip">
+        <span class="info-icon">⌁</span><div><strong>Privacy first</strong><p>Your selected documents are processed on your device. The app does not upload them to a PDF processing server.</p></div>
+      </section>
+      <p class="footnote">PDF Tools · by Sushila Engineering Works · Free utility app</p>
+    </section>
+
+    <section id="tool-screen" class="tool-screen hidden" aria-live="polite"></section>
+  </main>
+
+  <footer class="app-footer"><span>PDF Tools</span><span>Made for everyday documents</span></footer>
+
+  <script src="lib/pdf-lib.min.js"></script>
+  <script src="lib/pdf.min.js"></script>
+  <script src="lib/jspdf.umd.min.js"></script>
+  <script src="lib/jszip.min.js"></script>
+  <script src="app.bundle.js"></script>
+</body>
+</html>
