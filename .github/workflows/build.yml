@@ -15,59 +15,70 @@ concurrency:
 jobs:
   build:
     name: Build Android debug APK
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Pin the runner to avoid surprise image migrations during a build.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
+          package-manager-cache: false
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Accept Android SDK licences
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+        shell: bash
+        run: yes | sdkmanager --licenses >/dev/null 2>&1 || true
 
       - name: Install Android SDK packages
         run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Install JavaScript dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
-      - name: Test and bundle the app and offline PDF libraries
+      - name: Check project source
+        run: npm test
+
+      - name: Bundle app and local PDF libraries
+        run: npm run build:web
+
+      # The source ZIP may be uploaded over an older SEW7/ERP repository.
+      # Recreate Android from this project's PDF Tools Capacitor config so stale
+      # ERP package IDs, Gradle files, and native assets cannot break the build.
+      - name: Recreate clean Android project
         run: |
-          npm test
-          npm run build:web
-
-      - name: Create Android project
-        run: npx cap add android
+          rm -rf android
+          npx cap add android
 
       - name: Sync Capacitor plugins and web assets
         run: npx cap sync android
 
       - name: Apply PDF Tools launcher icons
-        run: |
-          rm -rf android/app/src/main/res/mipmap-anydpi-v26
-          cp -R icons/mipmap-* android/app/src/main/res/
+        run: cp -R icons/mipmap-* android/app/src/main/res/
 
       - name: Build APK
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew --no-daemon assembleDebug
+          ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Verify APK output
+        run: test -s android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: PDF-Tools-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
