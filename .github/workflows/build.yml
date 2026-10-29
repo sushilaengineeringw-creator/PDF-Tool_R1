@@ -1,0 +1,75 @@
+name: Build PDF Tools APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdf-tools-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Android debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licences
+        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Install JavaScript dependencies
+        run: npm install
+
+      - name: Test and bundle the app and offline PDF libraries
+        run: |
+          npm test
+          npm run build:web
+
+      - name: Create Android project
+        run: npx cap add android
+
+      - name: Sync Capacitor plugins and web assets
+        run: npx cap sync android
+
+      - name: Apply PDF Tools launcher icons
+        run: |
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          cp -R icons/mipmap-* android/app/src/main/res/
+
+      - name: Build APK
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew --no-daemon assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF-Tools-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
